@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-uh+r4+w1e!l#*m$py_ko43=r-ea-4*i(7*bjx%ivg_nosta!%s'
+SECRET_KEY = '***************'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "courses",
 ]
 
 MIDDLEWARE = [
@@ -75,10 +76,15 @@ WSGI_APPLICATION = 'cfehome.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',  # Указываем PostgreSQL как backend
+        'NAME': '****',  # Имя базы данных
+        'USER': '***',  # Имя пользователя для подключения к базе данных
+        'PASSWORD': '********',  # Пароль пользователя базы данных
+        'HOST': 'localhost',  # Хост (обычно 'localhost', если PostgreSQL на том же сервере)
+        'PORT': '5432',  # Порт (обычно 5432 для PostgreSQL)
     }
 }
+
 
 
 # Password validation
