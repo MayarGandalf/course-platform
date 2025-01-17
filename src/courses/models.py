@@ -1,6 +1,6 @@
 from django.db import models
 import helpers
-
+from cloudinary.models import CloudinaryField
 
 helpers.cloudinary_init()
 
@@ -23,7 +23,8 @@ def handle_upload(instance, filename):
 class Course(models.Model):
     title = models.CharField(max_length = 120)
     description = models.TextField(blank = True, null = True )
-    image = models.ImageField(upload_to = handle_upload, blank = True, null = True )
+    image = CloudinaryField("image", null = True )
+    # image = models.ImageField(upload_to = handle_upload, blank = True, null = True )
     access = models.CharField(
         max_length = 5,
         choices = AccessRequirement.choices, 
