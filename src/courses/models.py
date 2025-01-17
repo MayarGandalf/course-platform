@@ -38,3 +38,5 @@ class Course(models.Model):
     @property
     def is_published(self): 
         return self.status == PublishStatus.PUBLISHED
+    
+    
