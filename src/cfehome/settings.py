@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from decouple import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -17,12 +17,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOCAL_CDN = BASE_DIR.parent / "local-cdn"
 MEDIA_ROOT = LOCAL_CDN / "media"
 
+
+
+DJANGO_SECRET = config("DJANGO_SECRET")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '***********'
-
+SECRET_KEY  = DJANGO_SECRET
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -74,13 +77,13 @@ WSGI_APPLICATION = 'cfehome.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+DB_PASSWORD = config("DB_PASSWORD")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # Указываем PostgreSQL как backend
-        'NAME': '******',  # Имя базы данных
-        'USER': '*****',  # Имя пользователя для подключения к базе данных
-        'PASSWORD': '*******',  # Пароль пользователя базы данных
+        'NAME': 'course',  # Имя базы данных
+        'USER': 'igor',  # Имя пользователя для подключения к базе данных
+        'PASSWORD': DB_PASSWORD,  # Пароль пользователя базы данных
         'HOST': 'localhost',  # Хост (обычно 'localhost', если PostgreSQL на том же сервере)
         'PORT': '5432',  # Порт (обычно 5432 для PostgreSQL)
     }

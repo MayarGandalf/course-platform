@@ -1,4 +1,12 @@
 from django.db import models
+import helpers
+
+
+helpers.cloudinary_init()
+
+
+
+
 class AccessRequirement(models.TextChoices): 
     PUBLISHED = "pub", "Published"
     COMING_SOON = "soon", "Coming Soon"
