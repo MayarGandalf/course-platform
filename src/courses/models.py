@@ -67,10 +67,12 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete = models.CASCADE)
     title = models.CharField(max_length = 120)
     description = models.TextField(blank = True, null = True)
+    can_preview = models.BooleanField(default = False, help_text = "If user does not have access to course, can they see this?" )
     status = models.CharField(
         max_length=10, 
         choices=PublishStatus.choices,
-        default=PublishStatus.DRAFT
-        )    
+        default=PublishStatus.PUBLISHED
+        )  
+      
 
     
