@@ -6,6 +6,7 @@ from cloudinary import CloudinaryImage
 
 class LessonInline(admin.StackedInline ):
     model = Lesson 
+    readonly_fields = ['updated']
     extra = 0
 
 
