@@ -6,14 +6,16 @@ helpers.cloudinary_init()
 
 
 
-class AccessRequirement(models.TextChoices): 
-    PUBLISHED = "pub", "Published"
-    COMING_SOON = "soon", "Coming Soon"
-    DRAFT =  "draft", "Draft"
+class AccessRequirement(models.TextChoices):
+    ANYONE = "any", "Anyone"
+    EMAIL_REQUIRED = "email", "Email required"
 
-class PublishStatus(models.TextChoices): 
-    ANYONE = "any", "anyone"
-    EMAIL_REQUIRED = "email", "Enail required"
+
+class PublishStatus(models.TextChoices):
+    PUBLISHED = "publish", "Published"
+    COMING_SOON = "soon", "Coming Soon"
+    DRAFT = "draft", "Draft"
+
 
 def handle_upload(instance, filename): 
 
@@ -25,15 +27,16 @@ class Course(models.Model):
     image = CloudinaryField("image", null = True )
     # image = models.ImageField(upload_to = handle_upload, blank = True, null = True )
     access = models.CharField(
-        max_length = 5,
-        choices = AccessRequirement.choices, 
-        default = AccessRequirement.DRAFT
-     )  
-    status  = models.CharField(
-        max_length = 10,
-        choices = PublishStatus.choices, 
-        default = PublishStatus.EMAIL_REQUIRED
-     )
+        max_length=5, 
+        choices=AccessRequirement.choices,
+        default=AccessRequirement.EMAIL_REQUIRED
+    )
+    status = models.CharField(
+        max_length=10, 
+        choices=PublishStatus.choices,
+        default=PublishStatus.DRAFT
+        )
+     
     @property
     def is_published(self): 
         return self.status == PublishStatus.PUBLISHED
@@ -64,5 +67,10 @@ class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete = models.CASCADE)
     title = models.CharField(max_length = 120)
     description = models.TextField(blank = True, null = True)
+    status = models.CharField(
+        max_length=10, 
+        choices=PublishStatus.choices,
+        default=PublishStatus.DRAFT
+        )    
 
     
