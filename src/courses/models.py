@@ -23,9 +23,9 @@ def handle_upload(instance, filename):
     return f"{filename}"
 
 
-def generate_public_id(instance, *args, **kwargs): 
+def generate_public_id(instance, *args, **kwargs):
     title = instance.title
-    unique_id = str(uuid.uuid4()).replace("-","")
+    unique_id = str(uuid.uuid4()).replace("-", "")
     if not title:
         return unique_id
     slug = slugify(title)
@@ -33,20 +33,32 @@ def generate_public_id(instance, *args, **kwargs):
     return f"{slug}-{unique_id_short}"
 
 
-def get_public_id_prefix(instance, *args, **kwargs): 
-    print(args, kwargs)
+def get_public_id_prefix(instance, *args, **kwargs):
+    if hasattr(instance, 'path'):
+        path = instance.path
+        if path.startswith("/"):
+            path = path[1:]
+        if path.endswith('/'):
+            path = path[:-1]
+        return path
     public_id = instance.public_id
+    model_class = instance.__class__
+    model_name = model_class.__name__
+    model_name_slug = slugify(model_name)
     if not public_id:
-        return "courses"        
-    return f"courses/{public_id}"
+        return f"{model_name_slug}"
+    return f"{model_name_slug}/{public_id}"
 
-def get_display_name(instance, *args, **kwargs): 
-    print(args, kwargs)
-    title = instance.title
-    if title: 
-        return title
-    return "Course Upload"
+def get_display_name(instance, *args, **kwargs):
+    if hasattr(instance, 'get_display_name'):
+        return instance.get_display_name()
+    elif hasattr(instance, 'title'):
+        return instance.title
+    model_class = instance.__class__
+    model_name = model_class.__name__
+    return f"{model_name} Upload"
 
+# get_thumbnail_display_name = lambda instance: get_display_name(instance, is_thumbnail = True)
 
 class Course(models.Model):
     title = models.CharField(max_length = 120)
@@ -75,10 +87,23 @@ class Course(models.Model):
 
 
 
-    def save(self, *args, **kwargs): 
+    def save(self, *args, **kwargs):
+        # before save
         if self.public_id == "" or self.public_id is None:
             self.public_id = generate_public_id(self)
         super().save(*args, **kwargs)
+        # after save
+
+
+    def get_absolute_url(self):
+        return self.path
+
+    @property
+    def path(self):
+        return f"/courses/{self.public_id}"
+
+    def get_display_name(self):
+        return f"{self.title} - Course"
     
 
 
@@ -91,12 +116,12 @@ class Course(models.Model):
         if not self.image:
             return ""
         image_options = { 
-            "width":200
+            "width": 200
         }
         url = self.image.build_url(**image_options)
         return url 
     
-    def get_image_detail(self, as_html = False, width = 500 ): 
+    def get_image_thumbnail(self, as_html = False, width = 200 ): 
         if not self.image:
             return ""
         image_options = { 
@@ -113,9 +138,20 @@ class Lesson(models.Model):
     public_id = models.CharField(max_length = 130, blank = True, null = True)
     title = models.CharField(max_length = 120)
     description = models.TextField(blank = True, null = True)
-    thumbnail = CloudinaryField("image", blank = True, null = True)
+    thumbnail = CloudinaryField(
+                                "image", 
+                                public_id_prefix = get_public_id_prefix,
+                                display_name = get_display_name,
+                                blank = True, 
+                                null = True)
     order = models.IntegerField(default = 0)
-    video  = CloudinaryField("video", blank = True, null = True, resource_type = 'video')
+    video  = CloudinaryField(
+                                "video", 
+                                blank = True,
+                                public_id_prefix = get_public_id_prefix,
+                                display_name = get_display_name,
+                                null = True, 
+                                resource_type = 'video')
     can_preview = models.BooleanField(default = False, help_text = "If user does not have access to course, can they see this?" )
     status = models.CharField(
         max_length=10, 
@@ -132,6 +168,17 @@ class Lesson(models.Model):
     def save(self, *args, **kwargs): 
         if self.public_id == "" or self.public_id is None:
             self.public_id = generate_public_id(self)
-        super().save(*args, **kwargs)     
+        super().save(*args, **kwargs)
+
+    
+    @property  
+    def path(self):
+        course_path = self.course.path
+        if course_path.endswith("/"): 
+            course_path = course_path[:-1]
+        return f"{course_path}/lessons/{self.public_id}"
+
+    def get_display_name(self):
+        return f"{self.title} - {self.course.get_display_name()}"  
 
     

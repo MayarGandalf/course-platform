@@ -6,7 +6,10 @@ from cloudinary import CloudinaryImage
 
 class LessonInline(admin.StackedInline ):
     model = Lesson 
-    readonly_fields = ['updated']
+    readonly_fields = [
+        'public_id', 
+        'updated', 
+    ]
     extra = 0
 
 
@@ -20,8 +23,13 @@ class CourseAdmin(admin.ModelAdmin):
     readonly_fields = ['public_id','display_image']
 
     def display_image(self, obj, *args, **kwargs): 
-        url = obj.image_admin
+        url = obj.image_admin_url
         return format_html(f"<img src = {url} />")
     
     display_image.short_description = "Current Image"
+
+
+
+
+
 
