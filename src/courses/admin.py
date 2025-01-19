@@ -9,7 +9,8 @@ class LessonInline(admin.StackedInline ):
     readonly_fields = [
         'public_id', 
         'updated',
-        'display_image' 
+        'display_image', 
+        'display_video' 
     ]
     extra = 0
 
@@ -18,6 +19,12 @@ class LessonInline(admin.StackedInline ):
         return format_html(f"<img src = {url} />")
     
     display_image.short_description = "Current Image"
+
+    def display_video(self, obj, *args, **kwargs): 
+        url = helpers.get_cloudinary_video_object(obj,field_name = 'video', width=550)
+        return format_html(f"{url}")
+    
+    display_video.short_description = "Current Video"    
     
 
 
