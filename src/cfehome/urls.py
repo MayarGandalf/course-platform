@@ -16,17 +16,17 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
 from django.conf.urls.static import static 
 from django.urls import path, include
-
-from django.urls import path
-from django.conf.urls.static import static
-
 from courses import views as courses_views
+
+
+
 urlpatterns = [
-    path("courses/<int:course_id>/lessons/<int:lesson_id>/", courses_views.lesson_detail_view),
-    path("courses/<int:course_id>/", courses_views.course_detail_view),
-    path("courses/", courses_views.course_list_view),
+    path("courses/", include("courses.urls")),
     path("admin/", admin.site.urls),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
