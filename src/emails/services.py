@@ -11,9 +11,10 @@ def verify_email(email):
 def get_verivication_email_msg(verivication_instance, as_html = False): 
     if not isinstance(verivication_instance, EmailVerificationEvent): 
         return None
+    verify_link =verivication_instance.get_link()
     if as_html: 
-        return f"<h1>{verivication_instance.id}</h1>"
-    return f"{verivication_instance.id}"
+        return f"<h1>Verify your email with the following</h1><p><a href='{verify_link}'>{verify_link}</a></p>"
+    return f"Verify your email with the following:\n{verify_link}"
 
 def start_verification_event(email): 
     email_obj, created = Email.objects.get_or_create(email=email)

@@ -15,7 +15,7 @@ from decouple import config
 
 
 
-
+BASE_URL = config("BASE_URL", default = 'http://127.0.0.1:8000' )
 # default backend
 EMAIL_ADDRESS = "mayargandalf@gmail.com"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
