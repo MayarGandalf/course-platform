@@ -1,6 +1,7 @@
 from .models import Email, EmailVerificationEvent
 from django.conf import settings
 from django.core.mail import send_mail
+from django.utils import timezone
 
 EMAIL_HOST_USER = settings.EMAIL_HOST_USER
 
@@ -39,3 +40,34 @@ def send_verification_email(verify_obj_id):
         fail_silently = False, 
         html_message = text_html 
     )
+
+def verify_token(token, max_attempts = 5):
+    qs = EmailVerificationEvent.objects.filter(token = token)
+    if not qs.exist(): 
+        return False, "Invalid token"
+    """
+    Has token
+    """
+    has_email_expire = qs.filter(expired = True)
+    if not has_email_expire.exists() and not qs.count() == 1:
+        """Token expired"""
+        return False, "Expired token"
+    """
+    Has token, not expired
+    """
+    max_tempts_reached = qs.filter(attempts__gte = max_attempts)
+    if max_tempts_reached.exists():
+        """update max attempts + 1 """
+        # max_tempts_reached.update()
+        return False, "Token used too many times"
+    """Token valid"""
+    """Update attempts, expire token if att > max"""
+    obj = qs.first()
+    obj.attempts += 1
+    obj.last_attempt_at = timezone.now()
+    if obj.attempts > max_attempts: 
+        """invalidation process"""
+        obj.expired = True
+        obj.expired_at = timezone.now()
+    obj.save()
+    return True, "Welcome"
