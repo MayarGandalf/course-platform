@@ -26,12 +26,17 @@ def get_course_lessons(course_obj=None):
     )
     return lessons
 
-def get_lesson_detail(course_id = None, lesson_id = None):
+def get_lesson_detail(course_id=None, lesson_id=None):
     if lesson_id is None and course_id is None:
-        return None  
+        return None
     obj = None
-    try: 
-        obj = Lesson.objects.get(course__public_id = course_id,course__status = PublishStatus.PUBLISHED, status__in=[PublishStatus.PUBLISHED, PublishStatus.COMING_SOON], public_id = lesson_id)
+    try:
+        obj = Lesson.objects.get(
+            course__public_id=course_id,
+            course__status=PublishStatus.PUBLISHED,
+            status__in=[PublishStatus.PUBLISHED, PublishStatus.COMING_SOON],
+            public_id=lesson_id
+        )
     except Exception as e:
         print("lesson detail", e)
         pass

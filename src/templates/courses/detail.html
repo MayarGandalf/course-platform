@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>
-    {{object.title}}
-</h1>
-
-
-
+<h1>{{ object.title }}</h1>
+{% include 'courses/snippets/list-detail.html' with queryset=lessons_queryset %}
 {% endblock content %}
