@@ -9,11 +9,13 @@ EMAIL_ADDRESS = settings.EMAIL_ADDRESS
 def email_token_login_view(request):
     if not request.htmx: 
         return redirect('/')
+    email_id_in_session = request.session.get("email_id") 
     template = "emails/hx/form.html"
     form = EmailForm(request.POST or None)
     context = { 
         "form": form, 
-        "message": "" 
+        "message": "",
+        "show_form": not email_id_in_session
     }
     if form.is_valid():
         email_val = form.cleaned_data.get('email')
