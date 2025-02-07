@@ -4,3 +4,4 @@ psycopg2==2.9.10
 cloudinary 
 python-decouple 
 django-htmx == 1.21.0
+django-tailwind[reload]

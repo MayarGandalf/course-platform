@@ -76,8 +76,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_htmx",
+    "tailwind",
+    "theme",
     "courses",
     "emails",
+]
+TAILWIND_APP_NAME = "theme"
+INTERNAL_IPS =[
+    "0.0.0.0", 
+    "127.0.0.1",
 ]
 
 MIDDLEWARE = [
@@ -90,6 +97,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
 ]
+if DEBUG: 
+    INSTALLED_APPS.append("django_browser_reload")
+    MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
+
+
 
 ROOT_URLCONF = 'cfehome.urls'
 
@@ -168,3 +180,4 @@ MEDIA_URL = 'media/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
