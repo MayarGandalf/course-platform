@@ -4,19 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-  {% include 'base/js.html' %}
-  <title>{% block head_title %}
-    Hello World from Course Platform
-  {% endblock head_title %}
-  </title>
-</head>
-<body hx-headers='{"X_CSRFToken": "{{csrf_token}}"}'>
-  <div hx-get="/hx/login/" hx-trigger="load"></div>
 
+  <title>{% block head_title %}Hello World from Course Platform
+  {% endblock head_title %}</title>
+</head>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <div hx-get="/hx/login/" hx-trigger="load"></div>
+  
     {% block content %}
     <h1 class="text-3xl font-bold underline">
         Hello world from base!
-    </h1>
+      </h1>
     {% endblock content %}
+    {% include 'base/js.html' %}
 </body>
-</html>
