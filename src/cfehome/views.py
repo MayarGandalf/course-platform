@@ -4,6 +4,10 @@ from django.conf import settings
 from emails.models import Email, EmailVerificationEvent
 from emails import services as emails_services
 
+
+def login_logout_template_view(request): 
+    return render(request, "auth/login-logout.html", {})
+
 EMAIL_ADDRESS = settings.EMAIL_ADDRESS
 
 def home_view(request, *args, **kwargs):
